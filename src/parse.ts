@@ -10,6 +10,8 @@ const enum AtlasToken {
 
 /** Single frame data */
 interface Frame {
+  /** Name of the frame */
+  name: string | null;
   /** Source X-position on the image */
   x: number;
   /** Source Y-position on the image */
@@ -77,7 +79,7 @@ function parse(format: string): TinyAtlas {
   const animationIndex = values.indexOf(AtlasToken.Animations);
   const versionIndex = values.indexOf(AtlasToken.Version);
   const frameEndIndex = animationIndex === -1 ? versionIndex : animationIndex;
-  const framesRaw: number[] = values.slice(frameIndex + 1, frameEndIndex).map((v) => JSON.parse(v));
+  const framesRaw: (string | number)[] = values.slice(frameIndex + 1, frameEndIndex).map((v) => JSON.parse(v));
   const animationsRaw: (string | number)[] =
     animationIndex > -1 ? values.slice(animationIndex + 1, versionIndex).map((v) => JSON.parse(v)) : [];
   const version: number = values[versionIndex + 1] !== undefined ? JSON.parse(values[versionIndex + 1]) : 0;
@@ -85,18 +87,34 @@ function parse(format: string): TinyAtlas {
   if (typeof version !== 'number' || version < 1 || version > MAX_VERSION) {
     throw new Error('Invalid version');
   }
-  if (!framesRaw.length || !(framesRaw.length % 7 === 0)) {
+  if (!framesRaw.length) {
     throw new Error('Invalid frame length');
   }
+  const hasFrameName = typeof framesRaw[0] === 'string';
+  const frameArgSize = hasFrameName ? 8 : 7;
+  if (framesRaw.length % frameArgSize !== 0) {
+    throw new Error('Invalid frame length');
+  }
+  const frameNames = new Set();
   const frames: Frame[] = [];
-  for (let i = 0; i < framesRaw.length; i += 7) {
-    const x = framesRaw[i] as number;
-    const y = framesRaw[i + 1] as number;
-    const width = framesRaw[i + 2] as number;
-    const height = framesRaw[i + 3] as number;
-    const localX = framesRaw[i + 4] as number;
-    const localY = framesRaw[i + 5] as number;
-    const rotated = framesRaw[i + 6] as number;
+  for (let i = 0; i < framesRaw.length; i += frameArgSize) {
+    const j = hasFrameName ? 1 : 0;
+    const name = hasFrameName ? (framesRaw[i] as string) : null;
+    const x = framesRaw[j] as number;
+    const y = framesRaw[j + 1] as number;
+    const width = framesRaw[j + 2] as number;
+    const height = framesRaw[j + 3] as number;
+    const localX = framesRaw[j + 4] as number;
+    const localY = framesRaw[j + 5] as number;
+    const rotated = framesRaw[j + 6] as number;
+    if (hasFrameName && typeof name === 'string' && !name.length) {
+      throw new Error('Invalid frame name');
+    } else if (name !== null) {
+      if (frameNames.has(name)) {
+        throw new Error('Duplicate frame name');
+      }
+      frameNames.add(name);
+    }
     if (!isValidInt(x)) {
       throw new Error('Invalid frame x');
     }
@@ -118,11 +136,12 @@ function parse(format: string): TinyAtlas {
     if (!isValidInt(rotated) || (rotated !== 0 && rotated !== 1)) {
       throw new Error('Invalid frame rotated');
     }
-    frames.push({ x, y, width, height, localX, localY, rotated: Boolean(rotated) });
+    frames.push({ name, x, y, width, height, localX, localY, rotated: Boolean(rotated) });
   }
   if (animationIndex > -1 && (!animationsRaw.length || !(animationsRaw.length % 5 === 0))) {
     throw new Error('Invalid animation length');
   }
+  const animationNames = new Set();
   const animations: Animation[] = [];
   for (let i = 0; i < animationsRaw.length; i += 5) {
     const name = animationsRaw[i] as string;
@@ -132,6 +151,11 @@ function parse(format: string): TinyAtlas {
     const end = animationsRaw[i + 4] as number;
     if (typeof name !== 'string' || !name.length) {
       throw new Error('Invalid animation name');
+    } else {
+      if (animationNames.has(name)) {
+        throw new Error('Duplicate animation name');
+      }
+      animationNames.add(name);
     }
     if (!isValidInt(width)) {
       throw new Error('Invalid animation width');
