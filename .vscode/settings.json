@@ -1,0 +1,12 @@
+{
+  // Automatically format when saving
+  "editor.formatOnSave": true,
+  // Use prettier for formatting
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  // Make the default behavior consistent with prettier
+  // by making sure there's always a trailing newline
+  "editor.trimAutoWhitespace": true,
+  "files.trimTrailingWhitespace": true,
+  "files.trimFinalNewlines": true,
+  "files.insertFinalNewline": true
+}
