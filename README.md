@@ -9,20 +9,21 @@ Tiny Atlas is a format specification for spritesheets but also some tooling for 
 Data format is a single-line string that contains tokens `f` (frames), `a` (animations, _optional_) and `v` (version). Generally, here's the format:
 
 ```
-f [sx sy sw sh dx dy rotated ...]
+f [name? sx sy sw sh dx dy r ...]
 a [name w h start end ...]
 v [version]
 ```
 
 | Frame Property | Type     | Description                                           |
 | -------------- | -------- | ----------------------------------------------------- |
+| **name**       | _string_ | The frame name, optional.                             |
 | **sx**         | _number_ | The X-position on the image where to source the frame |
 | **sy**         | _number_ | The Y-position on the image where to source the frame |
 | **sw**         | _number_ | The source width of the frame                         |
 | **sh**         | _number_ | The source height of the frame                        |
 | **dx**         | _number_ | The destination X-Position when drawing the frame     |
 | **dy**         | _number_ | The destination Y-Position when drawing the frame     |
-| **rotated**    | _number_ | Either 1 (rotated 90 degrees CCW) or 0 (no rotation)  |
+| **r**          | _number_ | Either 1 (rotated 90 degrees CCW) or 0 (no rotation)  |
 
 | Animation Property | Type     | Description                                                                                                    |
 | ------------------ | -------- | -------------------------------------------------------------------------------------------------------------- |
@@ -45,5 +46,5 @@ Use `parse` to generate a data object that's much easier to use.
 ```ts
 import { parse } from 'tiny-atlas';
 
-const atlas = parse('f 0 0 100 100 0 0 v 1');
+const atlas = parse('f 0 0 100 100 0 0 0 v 1');
 ```
