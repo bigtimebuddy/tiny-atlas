@@ -9,27 +9,27 @@ Tiny Atlas is a format specification for spritesheets but also some tooling for 
 Data format is a single-line string that contains tokens `f` (frames), `a` (animations, _optional_) and `v` (version). Generally, here's the format:
 
 ```
-f [name? sx sy sw sh dx dy r ...]
-a [name w h start end ...]
+f [name? x y width height localX localY rotated ...]
+a [name width height start end ...]
 v [version]
 ```
 
 | Frame Property | Type     | Description                                           |
 | -------------- | -------- | ----------------------------------------------------- |
 | **name**       | _string_ | The frame name, optional.                             |
-| **sx**         | _number_ | The X-position on the image where to source the frame |
-| **sy**         | _number_ | The Y-position on the image where to source the frame |
-| **sw**         | _number_ | The source width of the frame                         |
-| **sh**         | _number_ | The source height of the frame                        |
-| **dx**         | _number_ | The destination X-Position when drawing the frame     |
-| **dy**         | _number_ | The destination Y-Position when drawing the frame     |
-| **r**          | _number_ | Either 1 (rotated 90 degrees CCW) or 0 (no rotation)  |
+| **x**          | _number_ | The X-position on the image where to source the frame |
+| **y**          | _number_ | The Y-position on the image where to source the frame |
+| **width**      | _number_ | The source width of the frame                         |
+| **height**     | _number_ | The source height of the frame                        |
+| **localX**     | _number_ | The destination X-Position when drawing the frame     |
+| **localY**     | _number_ | The destination Y-Position when drawing the frame     |
+| **rotated**    | _number_ | Either 1 (rotated 90 degrees CCW) or 0 (no rotation)  |
 
 | Animation Property | Type     | Description                                                                                                    |
 | ------------------ | -------- | -------------------------------------------------------------------------------------------------------------- |
 | **name**           | _string_ | The human-readable name of the animation state, must be double-quoted                                          |
-| **w**              | _number_ | The output width of the animation sequence                                                                     |
-| **h**              | _number_ | The output height of the animation sequence                                                                    |
+| **width**          | _number_ | The output width of the animation sequence                                                                     |
+| **height**         | _number_ | The output height of the animation sequence                                                                    |
 | **start**          | _number_ | The zero-based starting frame number. The total number of frames can be found by dividing the length of f by 7 |
 | **end**            | _number_ | The zero-based ending frame number                                                                             |
 
