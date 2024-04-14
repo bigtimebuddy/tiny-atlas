@@ -1,6 +1,6 @@
 # Tiny Atlas
 
-A atlas is a small piece of supplemental data that ships alongside an image file and create a "spritesheet". The atlas tells a rendering system how to carve up the image into various textures (i.e., sprites). These files tend to be computer-generated and computer-read. Generally, the format options tend to be pretty verbose. What if we could create a terse format AND encode it the image itself? Enter Tiny Atlas.
+An atlas is a small piece of supplemental data that ships alongside an image file and create a "spritesheet". The atlas tells a rendering system how to carve up the image into various textures (i.e., sprites). These files tend to be computer-generated and computer-read. Generally, the format options tend to be pretty verbose. What if we could create a terse format AND encode it the image itself? Enter Tiny Atlas.
 
 Tiny Atlas is a format specification for spritesheets but also some tooling for optionally encoding the altas into an image's metadata.
 
